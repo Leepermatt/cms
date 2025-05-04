@@ -1,1 +1,32 @@
-<p>contact-list works!</p>
+<div class="row">
+  <div class="col-xs-12">
+    <h1>Contact List</h1>
+    <button class="btn btn-success">Add Contact</button>
+  </div>
+</div>
+<hr />
+<div class="row">
+  <div class="col-xs-12">
+    <a
+      href="#"
+      class="list-group-item clearfix"
+      *ngFor="let contact of contacts"
+    >
+      <div class="pull-left">
+        <h4 class="list-group-item-heading">{{ contact.name }}</h4>
+        <!-- <p class="list-group-item">Description</p> -->
+        <span class="pull-right">
+          <img
+            [src]="contact.imageUrl"
+            alt="{{ contact.name }}"
+            class="img-responsive"
+            style="max-height: 50px"
+          />
+        </span>
+      </div>
+    </a>
+  </div>
+
+  <!-- <cms-contact-detail></cms-contact-detail> -->
+</div>
+<p></p>
