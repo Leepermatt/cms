@@ -2,16 +2,16 @@
   <div class="panel-heading">
     <div class="row pad-left-right">
       <span class="pull-left title">Documents</span>
-      <a class="btn btn-success pull-right">Add Document</a>
+      <!-- Updated: Add Document button now routes to /documents/new -->
+      <a class="btn btn-success pull-right" [routerLink]="['new']">
+        Add Document
+      </a>
+      >
     </div>
   </div>
   <div class="panel-body">
     <div class="center-panel">
-      <cms-document-item
-        *ngFor="let doc of documents"
-        [document]="doc"
-        (documentSelected)="onSelectedDocument(doc)"
-      >
+      <cms-document-item *ngFor="let doc of documents" [document]="doc">
       </cms-document-item>
     </div>
   </div>
