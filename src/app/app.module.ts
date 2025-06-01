@@ -2,6 +2,9 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
+
+import { AppRoutingModule } from './app-routing.module';
+
 import { HeaderComponent } from './header.component';
 import { ContactsComponent } from './contacts/contacts.component';
 import { ContactListComponent } from './contacts/contact-list/contact-list.component';
@@ -15,6 +18,7 @@ import { MessageItemComponent } from './messages/message-item/message-item.compo
 import { MessageEditComponent } from './messages/message-edit/message-edit.component';
 import { MessageListComponent } from './messages/message-list/message-list.component';
 import { DropdownDirective } from './dropdown.directive';
+import { Router, RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -35,7 +39,9 @@ import { DropdownDirective } from './dropdown.directive';
   ],
   imports: [
     BrowserModule,
-    DropdownDirective
+    DropdownDirective,
+    RouterModule,
+    AppRoutingModule
   ],
   providers: [],
   bootstrap: [AppComponent]
