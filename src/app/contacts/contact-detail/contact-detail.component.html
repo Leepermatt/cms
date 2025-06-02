@@ -14,7 +14,11 @@
 
     <div class="row" style="margin-top: 10px">
       <div class="col-xs-12 text-right">
-        <button type="button" class="btn btn-primary">Edit</button>
+        <a
+          class="btn btn-primary"
+          [routerLink]="['/contacts', contact?.id, 'edit']"
+          >Edit</a
+        >
         <button type="button" class="btn btn-danger">Delete</button>
       </div>
     </div>

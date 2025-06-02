@@ -22,6 +22,7 @@ import { Router, RouterModule } from '@angular/router';
 import { DocumentEditComponent } from './documents/document-edit/document-edit.component';
 import { DocumentService } from './documents/document.service';
 import { AppRoutingModule } from './app-routing.module';
+import { ContactEditComponent } from './contacts/contact-edit/contact-edit.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { AppRoutingModule } from './app-routing.module';
     MessageItemComponent,
     MessageEditComponent,
     MessageListComponent,
-    DocumentEditComponent
+    DocumentEditComponent,
+    ContactEditComponent
    
   ],
   imports: [

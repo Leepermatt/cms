@@ -1,16 +1,15 @@
 <div class="row">
   <div class="col-xs-12">
     <h1>Contact List</h1>
-    <button class="btn btn-success">Add Contact</button>
+    <a class="btn btn-success pull-right" [routerLink]="['/contacts', 'new']">
+      Add Contact
+    </a>
   </div>
 </div>
 <hr />
 <div class="row">
   <div class="col-xs-12">
-    <cms-contact-item
-      *ngFor="let contactEl of contacts"
-      [contact]="contactEl"
-      (contactSelected)="onSelected(contactEl)"
-    ></cms-contact-item>
+    <cms-contact-item *ngFor="let contact of contacts" [contact]="contact">
+    </cms-contact-item>
   </div>
 </div>

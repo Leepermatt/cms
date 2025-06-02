@@ -20,7 +20,4 @@ export class ContactListComponent implements OnInit {
     this.contacts = this.contactService.getContacts();
   }
 
-  onSelected(contact: Contact): void {
-    this.contactService.contactSelectedEvent.emit(contact);
-  }
 }
