@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Document } from '../document.model';
-import { DocumentService } from '../document.service'; // adjust path if needed
+import { DocumentService } from '../document.service'; 
 
 
 @Component({
@@ -16,5 +16,11 @@ export class DocumentListComponent implements OnInit {
     this.documents = this.documentService.getDocuments();
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+        this.documents = this.documentService.getDocuments();
+
+    this.documentService.documentChangedEvent.subscribe((updatedDocuments: Document[]) => {
+      this.documents = updatedDocuments;
+    });
+  }
 }
