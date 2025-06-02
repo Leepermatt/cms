@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
 
-import { AppRoutingModule } from './app-routing.module';
+
 
 import { HeaderComponent } from './header.component';
 import { ContactsComponent } from './contacts/contacts.component';
@@ -20,6 +20,8 @@ import { MessageListComponent } from './messages/message-list/message-list.compo
 import { DropdownDirective } from './dropdown.directive';
 import { Router, RouterModule } from '@angular/router';
 import { DocumentEditComponent } from './documents/document-edit/document-edit.component';
+import { DocumentService } from './documents/document.service';
+import { AppRoutingModule } from './app-routing.module';
 
 @NgModule({
   declarations: [
@@ -45,7 +47,7 @@ import { DocumentEditComponent } from './documents/document-edit/document-edit.c
     RouterModule,
     AppRoutingModule
   ],
-  providers: [],
+  providers: [DocumentService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
