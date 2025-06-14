@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
 
-
+import { FormsModule } from '@angular/forms';
 
 import { HeaderComponent } from './header.component';
 import { ContactsComponent } from './contacts/contacts.component';
@@ -41,10 +41,13 @@ import { ContactEditComponent } from './contacts/contact-edit/contact-edit.compo
     MessageListComponent,
     DocumentEditComponent,
     ContactEditComponent
+  
+ 
    
   ],
   imports: [
     BrowserModule,
+       FormsModule,
     DropdownDirective,
     RouterModule,
     AppRoutingModule
