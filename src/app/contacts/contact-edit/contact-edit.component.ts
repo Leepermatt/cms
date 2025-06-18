@@ -35,6 +35,7 @@ ngOnInit(): void {
 
     if (!this.id) {
       this.editMode = false;
+      this.contact = new Contact('', null, null, '', '', []);
       return;
     }
 
