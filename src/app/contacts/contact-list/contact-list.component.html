@@ -8,15 +8,19 @@
 </div>
 <hr />
 <div class="row">
-  <div class="col-xs-12">
-    <cms-contact-item
+  <div
+    class="col-xs-12"
+    cdkDropList
+    #availableContactsList="cdkDropList"
+    [cdkDropListData]="contacts"
+  >
+    <div
       *ngFor="let contact of contacts"
-      [contact]="contact"
-      dnd-draggable
-      [dragEnabled]="true"
-      [dragData]="contact"
-      [dropZones]="['contactGroup']"
+      cdkDrag
+      [cdkDragData]="contact"
+      style="margin-bottom: 10px"
     >
-    </cms-contact-item>
+      <cms-contact-item [contact]="contact"></cms-contact-item>
+    </div>
   </div>
 </div>

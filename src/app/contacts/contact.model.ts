@@ -13,7 +13,7 @@ export class Contact {
        email: string,
        phone: string,
        imageUrl: string,
-       group: Contact[],
+       group?: Contact[],
       
     ) {this.id = id;
       this.name = name;
@@ -21,6 +21,9 @@ export class Contact {
       this.phone = phone;
       this.imageUrl = imageUrl;
       this.group = group;
+
+      this.group = Array.isArray(group) ? group : group ? [group] : [];
+
     }
   }
   

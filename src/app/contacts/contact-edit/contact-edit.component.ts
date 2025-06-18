@@ -49,10 +49,16 @@ ngOnInit(): void {
     // Clone the original contact
     this.contact = JSON.parse(JSON.stringify(this.originalContact));
 
-    // If the original contact has a group, clone it too
-    if (this.originalContact.group && this.originalContact.group.length > 0) {
-      this.groupContacts = JSON.parse(JSON.stringify(this.originalContact.group));
-    }
+if (Array.isArray(this.originalContact.group)) {
+  this.groupContacts = JSON.parse(JSON.stringify(this.originalContact.group));
+} else if (this.originalContact.group && typeof this.originalContact.group === 'object') {
+  console.warn('Group was a single object, wrapping in array:', this.originalContact.group);
+  this.groupContacts = [JSON.parse(JSON.stringify(this.originalContact.group))];
+} else {
+  this.groupContacts = [];
+  console.log('Final groupContacts:', this.groupContacts);
+
+}
   });
 }
 onSubmit(form: NgForm): void {
@@ -79,7 +85,14 @@ onDrop(event: CdkDragDrop<Contact[]>) {
   if (event.previousContainer === event.container) {
     moveItemInArray(this.groupContacts, event.previousIndex, event.currentIndex);
   } else {
-    // optional: handle dragging from outside lists if needed
+    const draggedContact = event.previousContainer.data[event.previousIndex];
+
+    if (this.isInvalidContact(draggedContact)) {
+      return;
+    }
+console.log('Group before:', this.groupContacts);
+    this.groupContacts.splice(event.currentIndex, 0, { ...draggedContact});
+    console.log('Group after:', this.groupContacts);
   }
 }
 onCancel(): void {

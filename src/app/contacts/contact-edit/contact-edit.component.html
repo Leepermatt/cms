@@ -1,6 +1,43 @@
 <div class="panel panel-default">
   <div class="panel-body">
     <form #f="ngForm" (ngSubmit)="onSubmit(f)" id="contact-edit">
+      <!-- CONTACT LIST (DRAG SOURCE) -->
+      <div class="row">
+        <div class="col-xs-12">
+          <h1>Contact List</h1>
+          <a
+            class="btn btn-success pull-right"
+            [routerLink]="['/contacts', 'new']"
+          >
+            Add Contact
+          </a>
+        </div>
+      </div>
+      <hr />
+      <div class="row">
+        <div
+          class="col-xs-12"
+          cdkDropList
+          #availableContactsList="cdkDropList"
+          [cdkDropListData]="contact"
+          [cdkDropListConnectedTo]="[groupList]"
+        >
+          <div
+            *ngFor="let contact of contact"
+            cdkDrag
+            [cdkDragData]="contact"
+            style="margin-bottom: 10px"
+          >
+            <cms-contact-item
+              class="col-sm-11"
+              [contact]="contact"
+            ></cms-contact-item>
+          </div>
+        </div>
+      </div>
+
+      <hr />
+
       <!-- NAME FIELD -->
       <div class="row">
         <div class="col-sm-12 form-group">
@@ -90,37 +127,43 @@
         </div>
       </div>
 
-      <!-- GROUP CONTACTS -->
+      <!-- GROUP CONTACTS (DROP TARGET) -->
       <div class="row">
         <div class="form-group">
           <label for="groupList">Group Contacts:</label>
           <div
             class="row"
             id="groupList"
-            style="min-height: 3rem"
             cdkDropList
+            #groupList="cdkDropList"
             [cdkDropListData]="groupContacts"
+            [cdkDropListConnectedTo]="[availableContactsList]"
             (cdkDropListDropped)="onDrop($event)"
+            style="min-height: 3rem"
           >
             <div
               *ngFor="let contact of groupContacts; let i = index"
               cdkDrag
               [cdkDragData]="contact"
+              class="col-sm-12"
             >
-              <cms-contact-item
-                class="col-sm-11"
-                [contact]="contact"
-              ></cms-contact-item>
-              <button
-                class="btn btn-danger col-sm-2 deleteButton"
-                (click)="onRemoveItem(i)"
-              >
-                X
-              </button>
+              <div class="row">
+                <div class="col-sm-10">
+                  <cms-contact-item [contact]="contact"></cms-contact-item>
+                </div>
+                <div class="col-sm-2 text-right">
+                  <button
+                    class="btn btn-danger deleteButton"
+                    (click)="onRemoveItem(i)"
+                  >
+                    X
+                  </button>
+                </div>
+              </div>
             </div>
-            <span class="dragMsg" *ngIf="groupContacts?.length < 1"
-              >Drag contacts in group here</span
-            >
+            <span class="dragMsg" *ngIf="groupContacts?.length < 1">
+              Drag contacts into group here
+            </span>
           </div>
         </div>
 

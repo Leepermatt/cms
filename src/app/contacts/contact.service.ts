@@ -37,9 +37,17 @@ constructor() {
     getContacts(): Contact[] {
     return this.contacts.slice();
   }
-  getContact(id: string): Contact | undefined {
-    return this.contacts.find(contact => contact.id === id);
+getContact(id: string): Contact | undefined {
+  const contact = this.contacts.find(contact => contact.id === id);
+
+  // 🛠 Fix corrupted group field (e.g. object instead of array)
+  if (contact && contact.group && !Array.isArray(contact.group)) {
+    console.warn(`Fixing bad group on contact: ${contact.name}`);
+    contact.group = [contact.group];
   }
+
+  return contact;
+}
   addContact(newContact: Contact) {
   if (!newContact) return;
 
