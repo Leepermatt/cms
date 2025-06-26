@@ -124,53 +124,119 @@
       </div>
 
       <!-- GROUP CONTACTS (DROP TARGET) -->
-      <div class="row">
-        <div class="form-group">
-          <label for="groupList">Group Contacts:</label>
+      <div
+        class="row"
+        id="groupList"
+        cdkDropList
+        #groupList="cdkDropList"
+        [cdkDropListData]="groupContacts"
+        [cdkDropListConnectedTo]="[availableContactsList]"
+        (cdkDropListDropped)="onDrop($event)"
+        style="
+          min-height: 6rem;
+          border: 2px dashed #ccc;
+          background: #f9f9f9;
+          padding: 1rem;
+        "
+      >
+        <ng-container *ngFor="let contact of groupContacts; let i = index">
           <div
-            class="row"
-            id="groupList"
-            cdkDropList
-            #groupList="cdkDropList"
-            [cdkDropListData]="groupContacts"
-            [cdkDropListConnectedTo]="[availableContactsList]"
-            (cdkDropListDropped)="onDrop($event)"
-            style="min-height: 3rem"
+            cdkDrag
+            [cdkDragData]="contact"
+            class="col-sm-12"
+            style="margin-bottom: 1rem"
           >
-            <div
-              *ngFor="let contact of groupContacts; let i = index"
-              cdkDrag
-              [cdkDragData]="contact"
-              class="col-sm-12"
-            >
-              <div class="row">
-                <div class="col-sm-10">
-                  <cms-contact-item [contact]="contact"></cms-contact-item>
-                </div>
-                <div class="col-sm-2 text-right">
-                  <button
-                    class="btn btn-danger deleteButton"
-                    (click)="onRemoveItem(i)"
-                  >
-                    X
-                  </button>
-                </div>
+            <div class="row">
+              <div class="col-sm-10">
+                <cms-contact-item [contact]="contact"></cms-contact-item>
+              </div>
+              <div class="col-sm-2 text-right">
+                <button
+                  class="btn btn-danger deleteButton"
+                  (click)="onRemoveItem(i)"
+                >
+                  X
+                </button>
               </div>
             </div>
-            <span class="dragMsg" *ngIf="groupContacts?.length < 1">
-              Drag contacts into group here
-            </span>
+          </div>
+        </ng-container>
+
+        <span
+          class="dragMsg"
+          *ngIf="groupContacts?.length < 1"
+          style="display: block; text-align: center; padding: 1rem; color: #aaa"
+        >
+          Drag contacts into group here
+        </span>
+      </div>
+
+      <!-- REQUIRED FIELD WARNING -->
+      <div
+        class="alert alert-danger"
+        *ngIf="
+          (name.invalid && name.touched) || (email.invalid && email.touched)
+        "
+      >
+        The Name and Email fields are required.
+      </div>
+
+      <div
+        cdkDropList
+        [cdkDropListData]="groupContacts"
+        [cdkDropListConnectedTo]="[availableContactsList]"
+        (cdkDropListDropped)="onDrop($event)"
+        style="min-height: 100px; border: 2px dashed red; padding: 1rem"
+      >
+        <div
+          *ngFor="let contact of groupContacts"
+          cdkDrag
+          [cdkDragData]="contact"
+          style="padding: 1rem; background: #eee; margin-bottom: 0.5rem"
+        >
+          {{ contact.name }}
+        </div>
+      </div>
+      <h2>Drag from left to right</h2>
+
+      <div class="row">
+        <!-- Source List -->
+        <div
+          class="col-sm-6"
+          cdkDropList
+          #availableContactsList="cdkDropList"
+          [cdkDropListData]="availableContacts"
+          [cdkDropListConnectedTo]="[groupList]"
+          style="min-height: 100px; border: 2px solid blue; padding: 10px"
+        >
+          <div
+            *ngFor="let contact of availableContacts"
+            cdkDrag
+            [cdkDragData]="contact"
+            style="margin: 5px; padding: 10px; background: lightblue"
+          >
+            {{ contact.name }}
           </div>
         </div>
 
-        <!-- REQUIRED FIELD WARNING -->
+        <!-- Target List -->
         <div
-          class="alert alert-danger"
-          *ngIf="
-            (name.invalid && name.touched) || (email.invalid && email.touched)
-          "
+          class="col-sm-6"
+          cdkDropList
+          #groupList="cdkDropList"
+          [cdkDropListData]="groupContacts"
+          [cdkDropListConnectedTo]="[availableContactsList]"
+          (cdkDropListDropped)="onDrop($event)"
+          style="min-height: 100px; border: 2px solid green; padding: 10px"
         >
-          The Name and Email fields are required.
+          <div
+            *ngFor="let contact of groupContacts"
+            cdkDrag
+            [cdkDragData]="contact"
+            style="margin: 5px; padding: 10px; background: lightgreen"
+          >
+            {{ contact.name }}
+          </div>
         </div>
       </div>
 

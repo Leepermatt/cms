@@ -20,6 +20,7 @@ export class ContactEditComponent implements OnInit {
   originalContact: Contact;
   contact: Contact;
   groupContacts: Contact[] = [];
+  availableContacts: Contact[] = [];
   editMode: boolean = false;
   id: string;
 
@@ -32,10 +33,11 @@ export class ContactEditComponent implements OnInit {
 ngOnInit(): void {
   this.route.params.subscribe((params: Params) => {
     this.id = params['id'];
-
+console.log('Contact Edit Component loaded');
     if (!this.id) {
       this.editMode = false;
       this.contact = new Contact('', null, null, '', '', []);
+      this.availableContacts = [this.contact];
       return;
     }
 
@@ -49,6 +51,9 @@ ngOnInit(): void {
 
     // Clone the original contact
     this.contact = JSON.parse(JSON.stringify(this.originalContact));
+    this.availableContacts = [this.contact];
+
+    
 
 if (Array.isArray(this.originalContact.group)) {
   this.groupContacts = JSON.parse(JSON.stringify(this.originalContact.group));
@@ -83,19 +88,35 @@ onSubmit(form: NgForm): void {
   this.router.navigate(['/contacts']);
 }
 onDrop(event: CdkDragDrop<Contact[]>) {
+  console.log('Drop event triggered:', event);
   if (event.previousContainer === event.container) {
     moveItemInArray(this.groupContacts, event.previousIndex, event.currentIndex);
   } else {
     const draggedContact = event.previousContainer.data[event.previousIndex];
 
     if (this.isInvalidContact(draggedContact)) {
+      console.warn('Invalid contact dropped:', draggedContact);
       return;
     }
-console.log('Group before:', this.groupContacts);
-    this.groupContacts.splice(event.currentIndex, 0, { ...draggedContact});
-    console.log('Group after:', this.groupContacts);
+
+    this.groupContacts.splice(event.currentIndex, 0, { ...draggedContact });
+    console.log('GroupContacts after drop:', this.groupContacts); // <-- add this
   }
 }
+// onDrop(event: CdkDragDrop<Contact[]>) {
+//   if (event.previousContainer === event.container) {
+//     moveItemInArray(this.groupContacts, event.previousIndex, event.currentIndex);
+//   } else {
+//     const draggedContact = event.previousContainer.data[event.previousIndex];
+
+//     if (this.isInvalidContact(draggedContact)) {
+//       return;
+//     }
+// console.log('Group before:', this.groupContacts);
+//     this.groupContacts.splice(event.currentIndex, 0, { ...draggedContact});
+//     console.log('Group after:', this.groupContacts);
+//   }
+// }
 onCancel(): void {
   this.router.navigate(['/contacts']);
 }
