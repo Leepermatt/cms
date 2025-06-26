@@ -24,6 +24,7 @@ import { DocumentService } from './documents/document.service';
 import { AppRoutingModule } from './app-routing.module';
 import { ContactEditComponent } from './contacts/contact-edit/contact-edit.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { ContactsFilterPipe } from './contacts/contacts-filter.pipe';
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     DocumentEditComponent,
     ContactEditComponent,
     
+  
     
   
  
@@ -56,6 +58,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
      AppRoutingModule,
     DragDropModule,
     RouterModule,
+    ContactsFilterPipe
    
 
 
