@@ -17,16 +17,17 @@ subscription: Subscription;
 
 
   constructor(private documentService: DocumentService) {
-    this.documents = this.documentService.getDocuments();
+    
   }
 
   ngOnInit() {
-        this.documents = this.documentService.getDocuments();
+        
 
 this.subscription = this.documentService.documentListChangedEvent
   .subscribe((updatedDocuments: Document[]) => {
     this.documents = updatedDocuments;
   });
+  this.documentService.getDocuments();
 
   }
   ngOnDestroy() {
