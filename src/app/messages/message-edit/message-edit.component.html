@@ -1,6 +1,6 @@
 <div class="panel panel-default">
   <div class="panel-body">
-    <form id="document-edit">
+    <form id="message-edit">
       <div class="row">
         <div class="col-sm-12 form-group">
           <label for="subject">Subject</label>
@@ -9,8 +9,8 @@
             id="subject"
             class="form-control"
             size="120"
-            max="120"
-            #subject
+            maxlength="120"
+            #subjectInput
           />
         </div>
 
@@ -20,9 +20,9 @@
             type="text"
             id="message"
             class="form-control"
-            max="255"
+            maxlength="255"
             size="120"
-            #msgText
+            #msgTextInput
           />
         </div>
       </div>
@@ -31,7 +31,7 @@
           <button
             class="btn btn-success"
             type="button"
-            (click)="onSendMessage(msgText)"
+            (click)="onSendMessage()"
           >
             Send
           </button>

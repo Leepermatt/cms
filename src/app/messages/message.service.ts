@@ -1,24 +1,57 @@
-import { Injectable, EventEmitter } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Message } from './message.model';
-import { MOCKMESSAGES } from './MOCKMESSAGES';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MessageService {
-
   messages: Message[] = [];
+  maxMessageId: number = 0;
 
-  messageChangedEvent: EventEmitter<Message[]> = new EventEmitter<Message[]>();
+  messageChangedEvent: Subject<Message[]> = new Subject<Message[]>();
 
+  constructor(private http: HttpClient) {}
 
-  constructor() { 
-    this.messages = MOCKMESSAGES;
+  getMaxId(): number {
+    let maxId = 0;
+    for (const message of this.messages) {
+      const currentId = parseInt(message.id);
+      if (currentId > maxId) {
+        maxId = currentId;
+      }
+    }
+    return maxId;
   }
-  getMessages(): Message[] {
-    return this.messages.slice();
-  }
 
+getMessages(): void {
+  this.http
+    .get<{ [key: string]: Message }>('https://cms-project-9ba20-default-rtdb.firebaseio.com/messages.json')
+    .subscribe(
+      (responseData) => {
+        const messages: Message[] = [];
+
+        for (const key in responseData) {
+          if (responseData.hasOwnProperty(key)) {
+            const msg = responseData[key];
+            // Fix malformed or missing fields if necessary
+            if (msg && msg.id && msg.subject && msg.msgText && msg.sender) {
+              messages.push({ ...msg });
+            }
+          }
+        }
+
+        this.messages = messages;
+        this.maxMessageId = this.getMaxId();
+        this.messages.sort((a, b) => a.subject.localeCompare(b.subject));
+        this.messageChangedEvent.next(this.messages.slice());
+      },
+      (error: any) => {
+        console.error('Error fetching messages:', error);
+      }
+    );
+}
   getMessage(id: string): Message | null {
     for (let message of this.messages) {
       if (message.id === id) {
@@ -27,12 +60,24 @@ export class MessageService {
     }
     return null;
   }
-  addMessage(message: Message): void {
-    if (!message) {
-      return;
-    }
 
+  addMessage(message: Message): void {
+    if (!message) return;
+
+    this.maxMessageId++;
+    message.id = this.maxMessageId.toString();
     this.messages.push(message);
-    this.messageChangedEvent.emit(this.messages.slice());
+    this.storeMessages();
+  }
+
+  storeMessages(): void {
+    const messagesJson = JSON.stringify(this.messages);
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+
+    this.http
+      .put('https://cms-project-9ba20-default-rtdb.firebaseio.com/messages.json', messagesJson, { headers })
+      .subscribe(() => {
+        this.messageChangedEvent.next(this.messages.slice());
+      });
   }
 }
