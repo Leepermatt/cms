@@ -3,7 +3,7 @@ const router = express.Router();
 
 const Contact = require('../models/contact');
 const sequenceGenerator = require('./sequenceGenerator');
-const Sequence = new sequenceGenerator();
+
 
 // GET all contacts
 router.get('/', (req, res, next) => {
@@ -22,7 +22,7 @@ router.get('/', (req, res, next) => {
 
 // POST a new contact
 router.post('/', (req, res, next) => {
-  const maxContactId = Sequence.nextId('contacts');
+  const maxContactId = sequenceGenerator.nextId('contacts');
   const contact = new Contact({
     id: maxContactId.toString(),
     name: req.body.name,

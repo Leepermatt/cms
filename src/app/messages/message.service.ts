@@ -8,75 +8,76 @@ import { Subject } from 'rxjs';
 })
 export class MessageService {
   messages: Message[] = [];
-  maxMessageId: number = 0;
 
   messageChangedEvent: Subject<Message[]> = new Subject<Message[]>();
 
   constructor(private http: HttpClient) {}
 
-  getMaxId(): number {
-    let maxId = 0;
-    for (const message of this.messages) {
-      const currentId = parseInt(message.id);
-      if (currentId > maxId) {
-        maxId = currentId;
-      }
-    }
-    return maxId;
+  getMessages(): void {
+    this.http
+      .get<{ message: string; messages: Message[] }>('http://localhost:3000/messages')
+      .subscribe(
+        (responseData) => {
+          this.messages = responseData.messages;
+          this.messages.sort((a, b) => a.subject.localeCompare(b.subject));
+          this.messageChangedEvent.next(this.messages.slice());
+        },
+        (error: any) => {
+          console.error('Error fetching messages:', error);
+        }
+      );
   }
 
-getMessages(): void {
-  this.http
-    .get<{ [key: string]: Message }>('https://cms-project-9ba20-default-rtdb.firebaseio.com/messages.json')
-    .subscribe(
-      (responseData) => {
-        const messages: Message[] = [];
-
-        for (const key in responseData) {
-          if (responseData.hasOwnProperty(key)) {
-            const msg = responseData[key];
-            // Fix malformed or missing fields if necessary
-            if (msg && msg.id && msg.subject && msg.msgText && msg.sender) {
-              messages.push({ ...msg });
-            }
-          }
-        }
-
-        this.messages = messages;
-        this.maxMessageId = this.getMaxId();
-        this.messages.sort((a, b) => a.subject.localeCompare(b.subject));
-        this.messageChangedEvent.next(this.messages.slice());
-      },
-      (error: any) => {
-        console.error('Error fetching messages:', error);
-      }
-    );
-}
   getMessage(id: string): Message | null {
-    for (let message of this.messages) {
-      if (message.id === id) {
-        return message;
-      }
-    }
-    return null;
+    return this.messages.find((msg) => msg.id === id) || null;
   }
 
   addMessage(message: Message): void {
     if (!message) return;
 
-    this.maxMessageId++;
-    message.id = this.maxMessageId.toString();
-    this.messages.push(message);
-    this.storeMessages();
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    message.id = ''; // ensure backend assigns the ID
+
+this.http
+  .post<{ message: string; createdMessage: Message }>(
+    'http://localhost:3000/messages',
+    message,
+    { headers }
+  )
+  .subscribe((responseData) => {
+    this.messages.push(responseData.createdMessage);
+    this.messageChangedEvent.next(this.messages.slice());
+  });
   }
 
-  storeMessages(): void {
-    const messagesJson = JSON.stringify(this.messages);
+  updateMessage(originalMessage: Message, newMessage: Message): void {
+    if (!originalMessage || !newMessage) return;
+
+    const pos = this.messages.findIndex((msg) => msg.id === originalMessage.id);
+    if (pos < 0) return;
+
+    newMessage.id = originalMessage.id;
+
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
     this.http
-      .put('https://cms-project-9ba20-default-rtdb.firebaseio.com/messages.json', messagesJson, { headers })
+      .put('http://localhost:3000/messages/' + originalMessage.id, newMessage, { headers })
       .subscribe(() => {
+        this.messages[pos] = newMessage;
+        this.messageChangedEvent.next(this.messages.slice());
+      });
+  }
+
+  deleteMessage(message: Message): void {
+    if (!message) return;
+
+    const pos = this.messages.findIndex((msg) => msg.id === message.id);
+    if (pos < 0) return;
+
+    this.http
+      .delete('http://localhost:3000/messages/' + message.id)
+      .subscribe(() => {
+        this.messages.splice(pos, 1);
         this.messageChangedEvent.next(this.messages.slice());
       });
   }

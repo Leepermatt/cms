@@ -3,7 +3,7 @@ const router = express.Router();
 
 const Message = require('../models/message');
 const sequenceGenerator = require('./sequenceGenerator');
-const Sequence = new sequenceGenerator();
+
 
 // GET: return all messages
 router.get('/', (req, res, next) => {
@@ -25,7 +25,7 @@ router.get('/', (req, res, next) => {
 
 // POST: add a new message
 router.post('/', (req, res, next) => {
-  const maxMessageId = Sequence.nextId('messages');
+  const maxMessageId = sequenceGenerator.nextId('messages');
 
   const message = new Message({
     id: maxMessageId.toString(),
@@ -42,6 +42,7 @@ router.post('/', (req, res, next) => {
       });
     })
     .catch(error => {
+      console.error('POST /messages error:', error);
       res.status(500).json({
         message: 'An error occurred',
         error: error

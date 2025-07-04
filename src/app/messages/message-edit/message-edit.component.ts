@@ -24,7 +24,7 @@ export class MessageEditComponent {
       '',         // id (assigned by service)
       subject,    // subject
       text,       // msgText
-      'Admin'     // sender (can be replaced with actual user)
+      '6868218e9236bac326718dce'     // sender (can be replaced with actual user)
     );
 
     this.messageService.addMessage(newMessage);

@@ -1,6 +1,7 @@
 // src/app/contacts/contact.model.ts
 
 export class Contact {
+  public _id?: string;
   public id: string;
   public name: string;
   public email: string;
@@ -14,6 +15,7 @@ export class Contact {
        phone: string,
        imageUrl: string,
        group?: Contact[],
+       _id?: string
       
     ) {this.id = id;
       this.name = name;
@@ -21,7 +23,7 @@ export class Contact {
       this.phone = phone;
       this.imageUrl = imageUrl;
       this.group = group;
-
+      this._id = _id;
       this.group = Array.isArray(group) ? group : group ? [group] : [];
 
     }

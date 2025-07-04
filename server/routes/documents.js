@@ -3,7 +3,7 @@ const router = express.Router();
 
 const Document = require('../models/document');
 const sequenceGenerator = require('./sequenceGenerator');
-const Sequence = new sequenceGenerator();
+
 
 // GET all documents
 router.get('/', (req, res, next) => {
@@ -22,7 +22,7 @@ router.get('/', (req, res, next) => {
 
 // POST a new document
 router.post('/', (req, res, next) => {
-  const maxDocumentId = Sequence.nextId('documents');
+  const maxDocumentId = sequenceGenerator.nextId('documents');
   const document = new Document({
     id: maxDocumentId.toString(),
     name: req.body.name,
